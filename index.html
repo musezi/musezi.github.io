@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#f4f5f7" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0e1013" media="(prefers-color-scheme: dark)" />
+<meta name="format-detection" content="telephone=no" />
+<title>说说</title>
+<style>
+/* ===================== 基础重置 ===================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+:root{
+  --bg: #f4f5f7;
+  --bg-blur: rgba(244,245,247,.82);
+  --card: #ffffff;
+  --text: #1f2329;
+  --text-2: #8a919f;
+  --line: #ebedf0;
+  --brand: #ff8140;
+  --brand-soft: rgba(255,129,64,.1);
+  --radius: 16px;
+  --maxw: 620px;
+  --shadow: 0 1px 2px rgba(16,24,40,.04), 0 8px 24px -14px rgba(16,24,40,.25);
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: #0e1013;
+    --bg-blur: rgba(14,16,19,.8);
+    --card: #171a20;
+    --text: #e8eaee;
+    --text-2: #79818f;
+    --line: #24282f;
+    --brand: #ff9052;
+    --brand-soft: rgba(255,144,82,.13);
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px -16px rgba(0,0,0,.9);
+  }
+}
+
+html{
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+}
+
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.72 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+::selection{ background: var(--brand); color: #fff; }
+a{ color: inherit; }
+img{ -webkit-user-drag: none; user-select: none; }
+
+/* ===================== 顶栏 ===================== */
+.topbar{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg-blur);
+  backdrop-filter: saturate(180%) blur(16px);
+  -webkit-backdrop-filter: saturate(180%) blur(16px);
+  border-bottom: 1px solid var(--line);
+  padding-top: var(--safe-top);
+}
+
+.topbar__inner{
+  max-width: var(--maxw);
+  margin-inline: auto;
+  height: 56px;
+  padding-left: max(16px, var(--safe-left));
+  padding-right: max(16px, var(--safe-right));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo{
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #ffb26b, var(--brand));
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  flex: 0 0 auto;
+  box-shadow: 0 4px 12px -4px rgba(255,129,64,.7);
+  overflow: hidden;
+}
+
+.logo img{ width: 100%; height: 100%; object-fit: cover; }
+
+.topbar__title{
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: .3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.topbar__count{
+  margin-left: auto;
+  font-size: 13px;
+  color: var(--text-2);
+  flex: 0 0 auto;
+}
+
+/* ===================== 列表 ===================== */
+.feed{
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding: 16px max(12px, var(--safe-left)) 40px max(12px, var(--safe-right));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media (min-width: 640px){
+  .feed{ padding: 20px 16px 56px; gap: 14px; }
+}
+
+/* ===================== 卡片 ===================== */
+.post{
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  animation: fadeUp .4s cubic-bezier(.22,.8,.36,1) both;
+  min-width: 0;
+}
+
+@keyframes fadeUp{
+  from{ opacity: 0; transform: translateY(10px); }
+  to  { opacity: 1; transform: none; }
+}
+
+.post__head{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar{
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #ffc07f, var(--brand));
+  color: #fff;
+  font-size: 17px;
+  font-weight: 600;
+  overflow: hidden;
+  user-select: none;
+}
+
+.avatar img{
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.post__who{
+  min-width: 0;
+  flex: 1;
+}
+
+.post__name{
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post__time{
+  display: block;
+  font-size: 12.5px;
+  color: var(--text-2);
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+/* ===================== 正文 ===================== */
+.post__text{
+  margin-top: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.post__text a{
+  color: var(--brand);
+  text-decoration: none;
+  word-break: break-all;
+}
+
+.post__text a:hover{ text-decoration: underline; }
+
+/* ===================== 图片九宫格 ===================== */
+.imgs{
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  max-width: 100%;
+}
+
+.imgs[data-n="1"]{
+  grid-template-columns: minmax(0, 1fr);
+  max-width: min(280px, 100%);
+}
+
+.imgs[data-n="2"],
+.imgs[data-n="4"]{
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: min(340px, 100%);
+}
+
+.imgs[data-n="3"],
+.imgs[data-n="5"],
+.imgs[data-n="6"],
+.imgs[data-n="7"],
+.imgs[data-n="8"],
+.imgs[data-n="9"]{
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.imgs img{
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  border-radius: 10px;
+  background: var(--line);
+  cursor: zoom-in;
+  transition: opacity .2s, transform .25s;
+}
+
+.imgs[data-n="1"] img{ aspect-ratio: 4 / 3; }
+
+@supports not (aspect-ratio: 1 / 1){
+  .imgs img{ height: 0; padding-bottom: 100%; }
+  .imgs[data-n="1"] img{ padding-bottom: 75%; }
+}
+
+.imgs img:hover{ opacity: .88; }
+.imgs img:active{ transform: scale(.98); }
+
+/* ===================== 分页器 ===================== */
+.pager{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 0 8px;
+  margin-top: 4px;
+}
+
+.pager__btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  font: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: background .18s, border-color .18s, color .18s;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.pager__btn:hover:not(:disabled){
+  background: var(--brand-soft);
+  color: var(--brand);
+  border-color: var(--brand);
+}
+
+.pager__btn:active:not(:disabled){
+  transform: scale(.97);
+}
+
+.pager__btn:disabled{
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+.pager__btn svg{
+  width: 15px; height: 15px;
+  flex: 0 0 auto;
+}
+
+.pager__info{
+  font-size: 13.5px;
+  color: var(--text-2);
+  min-width: 64px;
+  text-align: center;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 380px){
+  .pager{
+    gap: 8px;
+    padding: 16px 0 4px;
+  }
+  .pager__btn{
+    padding: 7px 10px;
+    font-size: 13px;
+    min-height: 38px;
+  }
+  .pager__info{
+    font-size: 13px;
+    min-width: 52px;
+  }
+}
+
+/* ===================== 状态提示 ===================== */
+.state{
+  text-align: center;
+  color: var(--text-2);
+  font-size: 14px;
+  padding: 80px 20px;
+}
+
+.state code{
+  background: var(--brand-soft);
+  color: var(--brand);
+  padding: 1px 6px;
+  border-radius: 5px;
+  font-size: 13px;
+}
+
+.skeleton{
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+.sk-line{
+  height: 14px;
+  border-radius: 7px;
+  background: linear-gradient(90deg, var(--line) 25%, var(--bg) 37%, var(--line) 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.3s ease-in-out infinite;
+  margin-bottom: 10px;
+}
+
+.sk-line:last-child{ margin-bottom: 0; width: 55%; }
+
+@keyframes shimmer{
+  0%{ background-position: 100% 50%; }
+  100%{ background-position: 0 50%; }
+}
+
+/* ===================== 页脚 ===================== */
+.footer{
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding: 0 max(16px, var(--safe-left)) calc(32px + var(--safe-bottom)) max(16px, var(--safe-right));
+  text-align: center;
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+/* ===================== 图片放大 ===================== */
+.lightbox{
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0,0,0,.9);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  padding-left: max(24px, var(--safe-left));
+  padding-right: max(24px, var(--safe-right));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.lightbox.show{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox img{
+  max-width: 100%;
+  max-height: 88vh;
+  max-height: 88dvh;
+  border-radius: 12px;
+  object-fit: contain;
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+}
+
+/* ===================== 小屏精细适配 ===================== */
+@media (max-width: 380px){
+  .feed{
+    padding: 12px max(8px, var(--safe-left)) 32px max(8px, var(--safe-right));
+    gap: 10px;
+  }
+  .post{
+    padding: 13px;
+    border-radius: 14px;
+  }
+  .avatar{
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
+  }
+  .post__head{ gap: 8px; }
+  .imgs{ gap: 4px; }
+  .imgs img{ border-radius: 8px; }
+  .post__name{ font-size: 14.5px; }
+  .post__text{ margin-top: 10px; }
+}
+
+/* ===================== 横屏矮屏 ===================== */
+@media (orientation: landscape) and (max-height: 480px){
+  .topbar__inner{ height: 48px; }
+  .topbar__title{ font-size: 16px; }
+  .feed{
+    padding-top: 12px;
+    padding-bottom: 24px;
+  }
+  .post{ padding: 12px 14px; }
+  .lightbox img{ max-height: 80vh; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <div class="logo" id="logo">x</div>
+    <h1 class="topbar__title" id="pageTitle">说说</h1>
+    <span class="topbar__count" id="count"></span>
+  </div>
+</header>
+
+<main class="feed" id="feed">
+  <div class="skeleton">
+    <div class="sk-line" style="width:40%"></div>
+    <div class="sk-line"></div>
+    <div class="sk-line"></div>
+    <div class="sk-line"></div>
+  </div>
+  <div class="skeleton">
+    <div class="sk-line" style="width:55%"></div>
+    <div class="sk-line"></div>
+    <div class="sk-line"></div>
+  </div>
+</main>
+
+<footer class="footer">
+  © Powered by <span id="footerName">xxx</span>
+</footer>
+
+<div class="lightbox" id="lightbox"><img alt="" /></div>
+
+<script>
+/* =========================================================
+ * 1. 站点配置
+ * =======================================================*/
+const CONFIG = {
+  // 留空 = 自动从 GitHub Pages 域名推断（username.github.io）
+  githubUsername: '',
+
+  // 数据文件地址
+  postsUrl: './posts.json',
+
+  // 头像 / 昵称兜底
+  fallbackName: 'xxx',
+  fallbackAvatar: '',
+
+  // 标题后缀（最终显示： "{昵称}的说说"）
+  titleSuffix: '的说说',
+
+  // 每页显示多少条；设为 0 或负数 = 不分页，显示全部
+  pageSize: 10,
+};
+
+/* =========================================================
+ * 2. 图标
+ * =======================================================*/
+const ICON = {
+  chevLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>',
+  chevRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>',
+};
+
+/* =========================================================
+ * 3. 状态
+ * =======================================================*/
+const state = {
+  name: CONFIG.fallbackName,
+  avatar: CONFIG.fallbackAvatar,
+  posts: [],
+  currentPage: 1,
+};
+
+/* =========================================================
+ * 4. 工具函数
+ * =======================================================*/
+const $ = id => document.getElementById(id);
+const pad = n => String(n).padStart(2, '0');
+
+function esc(s){
+  return String(s ?? '').replace(/[&<>"']/g, c => (
+    { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]
+  ));
+}
+
+function linkify(escaped){
+  const tokens = [];
+  let s = escaped.replace(/&(?:amp|lt|gt|quot|#39);/g, m => {
+    tokens.push(m);
+    return '\u0000' + (tokens.length - 1) + '\u0000';
+  });
+  s = s
+    .replace(/#([^#\s&]{1,30})#/g, '<a href="#">#$1#</a>')
+    .replace(/@([A-Za-z0-9_\u4e00-\u9fa5]{1,20})/g, '<a href="#">@$1</a>');
+  return s.replace(/\u0000(\d+)\u0000/g, (_, i) => tokens[+i]);
+}
+
+function fmtFull(iso){
+  const d = new Date(iso);
+  if (isNaN(d)) return iso;
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+function timeAgo(iso){
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  const diff = Date.now() - d.getTime();
+  const MIN = 60000, HOUR = 60 * MIN, DAY = 24 * HOUR;
+
+  if (diff < 0) return fmtFull(iso);
+  if (diff < MIN) return '刚刚';
+  if (diff < HOUR) return Math.floor(diff / MIN) + ' 分钟前';
+  if (diff < DAY) return Math.floor(diff / HOUR) + ' 小时前';
+  if (diff < 7 * DAY) return Math.floor(diff / DAY) + ' 天前';
+  return fmtFull(iso).slice(0, 10);
+}
+
+/* =========================================================
+ * 5. 数据加载
+ * =======================================================*/
+function detectGitHubUsername(){
+  if (CONFIG.githubUsername) return CONFIG.githubUsername;
+  const host = location.hostname;
+  if (host.endsWith('.github.io')) {
+    return host.slice(0, -'.github.io'.length);
+  }
+  return '';
+}
+
+async function fetchGitHubUser(){
+  const username = detectGitHubUsername();
+  if (!username) {
+    console.info('[GitHub API] 未识别到用户名，使用 fallbackName 兜底');
+    return;
+  }
+  try {
+    const res = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const user = await res.json();
+    state.name = user.name || user.login || state.name;
+    if (user.avatar_url) state.avatar = user.avatar_url;
+  } catch (e) {
+    console.warn('[GitHub API] 获取用户信息失败，使用兜底配置', e);
+  }
+}
+
+function normalizeImages(imagePath){
+  if (Array.isArray(imagePath)) {
+    return imagePath.filter(Boolean).map(String);
+  }
+  if (typeof imagePath === 'string' && imagePath.trim()) {
+    return [imagePath.trim()];
+  }
+  return [];
+}
+
+function normalizePost(raw, index){
+  if (!raw || typeof raw !== 'object') return null;
+
+  const id = raw.id || `post-${index}`;
+  const time = raw.publishedAt || raw.time || new Date().toISOString();
+  const text = raw.caption ?? raw.text ?? '';
+  const images = normalizeImages(raw.imagePath ?? raw.images);
+
+  return {
+    id: String(id),
+    time,
+    text: String(text),
+    images,
+  };
+}
+
+async function loadPosts(){
+  const res = await fetch(CONFIG.postsUrl, { cache: 'no-cache' });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const data = await res.json();
+  if (!Array.isArray(data)) throw new Error('posts.json 根节点必须是数组');
+
+  return data
+    .map(normalizePost)
+    .filter(Boolean)
+    .sort((a, b) => new Date(b.time) - new Date(a.time));
+}
+
+/* =========================================================
+ * 6. 分页工具
+ * =======================================================*/
+function isPagingEnabled(){
+  return Number(CONFIG.pageSize) > 0;
+}
+
+function getTotalPages(){
+  if (!isPagingEnabled()) return 1;
+  return Math.max(1, Math.ceil(state.posts.length / CONFIG.pageSize));
+}
+
+function getPagePosts(){
+  if (!isPagingEnabled()) return state.posts;
+  const size = Number(CONFIG.pageSize);
+  const start = (state.currentPage - 1) * size;
+  return state.posts.slice(start, start + size);
+}
+
+/* =========================================================
+ * 7. 渲染
+ * =======================================================*/
+const feed = $('feed');
+
+function avatarHTML(size){
+  if (state.avatar) {
+    return `<div class="${size}"><img src="${esc(state.avatar)}" alt=""></div>`;
+  }
+  const initial = (state.name.trim()[0] || '·').toUpperCase();
+  return `<div class="${size}">${esc(initial)}</div>`;
+}
+
+function renderImages(images){
+  if (!images.length) return '';
+  const list = images.slice(0, 9);
+  const n = list.length;
+  const imgs = list.map(src =>
+    `<img src="${esc(src)}" alt="" loading="lazy" decoding="async">`
+  ).join('');
+  return `<div class="imgs" data-n="${n}">${imgs}</div>`;
+}
+
+function renderPost(p, i){
+  const timeText = timeAgo(p.time);
+
+  return `
+  <article class="post" style="animation-delay:${Math.min(i * 45, 360)}ms">
+    <div class="post__head">
+      ${avatarHTML('avatar')}
+      <div class="post__who">
+        <div class="post__name">${esc(state.name)}</div>
+        <time class="post__time" datetime="${esc(p.time)}" title="${esc(fmtFull(p.time))}">
+          ${esc(timeText)}
+        </time>
+      </div>
+    </div>
+
+    ${p.text ? `<div class="post__text">${linkify(esc(p.text))}</div>` : ''}
+    ${renderImages(p.images)}
+  </article>`;
+}
+
+function renderPager(){
+  if (!isPagingEnabled()) return '';
+
+  const total = getTotalPages();
+  if (total <= 1) return '';
+
+  const cur = state.currentPage;
+  const prevDisabled = cur <= 1 ? ' disabled' : '';
+  const nextDisabled = cur >= total ? ' disabled' : '';
+
+  return `
+  <nav class="pager" aria-label="分页导航">
+    <button class="pager__btn" data-page="${cur - 1}"${prevDisabled} type="button" aria-label="上一页">
+      ${ICON.chevLeft}<span>上一页</span>
+    </button>
+    <span class="pager__info" aria-live="polite">${cur} / ${total}</span>
+    <button class="pager__btn" data-page="${cur + 1}"${nextDisabled} type="button" aria-label="下一页">
+      <span>下一页</span>${ICON.chevRight}
+    </button>
+  </nav>`;
+}
+
+function renderFeed(){
+  if (!state.posts.length) {
+    feed.innerHTML = '<div class="state">还没有说说～<br>在 <code>posts.json</code> 里添加一条吧</div>';
+    return;
+  }
+
+  const pagePosts = getPagePosts();
+  feed.innerHTML = pagePosts.map(renderPost).join('') + renderPager();
+}
+
+function updateCount(){
+  const total = state.posts.length;
+  if (!total) {
+    $('count').textContent = '';
+    return;
+  }
+  if (isPagingEnabled() && getTotalPages() > 1) {
+    $('count').textContent = `共 ${total} 条 · 第 ${state.currentPage}/${getTotalPages()} 页`;
+  } else {
+    $('count').textContent = `共 ${total} 条`;
+  }
+}
+
+function render(){
+  const pageTitle = `${state.name}${CONFIG.titleSuffix}`;
+
+  $('pageTitle').textContent = pageTitle;
+  $('footerName').textContent = state.name;
+  document.title = pageTitle;
+
+  const logo = $('logo');
+  if (state.avatar) {
+    logo.innerHTML = `<img src="${esc(state.avatar)}" alt="">`;
+  } else {
+    logo.textContent = (state.name.trim()[0] || 'x').toUpperCase();
+  }
+
+  updateCount();
+  renderFeed();
+}
+
+function renderError(err){
+  console.error(err);
+  feed.innerHTML = `
+    <div class="state">
+      加载 <code>${esc(CONFIG.postsUrl)}</code> 失败：${esc(err.message)}<br><br>
+      请确认文件已上传到仓库根目录，且格式为 JSON 数组。
+    </div>`;
+}
+
+/* =========================================================
+ * 8. 交互
+ * =======================================================*/
+const lightbox = $('lightbox');
+const lightboxImg = lightbox.querySelector('img');
+
+function openLightbox(src){
+  lightboxImg.src = src;
+  lightbox.classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox(){
+  lightbox.classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+lightbox.addEventListener('click', closeLightbox);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeLightbox();
+});
+
+feed.addEventListener('click', e => {
+  /* 分页 */
+  const pageBtn = e.target.closest('.pager__btn');
+  if (pageBtn) {
+    if (pageBtn.disabled) return;
+    const page = Number(pageBtn.dataset.page);
+    const total = getTotalPages();
+    if (page < 1 || page > total || page === state.currentPage) return;
+
+    state.currentPage = page;
+    renderFeed();
+    updateCount();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    return;
+  }
+
+  /* 看大图 */
+  const img = e.target.closest('.imgs img');
+  if (img) openLightbox(img.currentSrc || img.src);
+});
+
+/* =========================================================
+ * 9. 启动
+ * =======================================================*/
+(async function init(){
+  await fetchGitHubUser();
+  try {
+    state.posts = await loadPosts();
+    state.currentPage = 1;
+    render();
+  } catch (err) {
+    renderError(err);
+  }
+})();
+</script>
+</body>
+</html>
