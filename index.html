@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- repohome-pages v2 -->
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
@@ -396,7 +397,263 @@ img{ -webkit-user-drag: none; user-select: none; }
   color: var(--text-2);
 }
 
-/* ===================== 图片放大 ===================== */
+/* ===================== 视频卡片（第 37 轮，自绘播放器封面） ===================== */
+.vcards{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.vcard{
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.vcard video{
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+  background: #000;
+}
+
+@supports not (aspect-ratio: 16 / 9){
+  .vcard video{ height: 0; padding-bottom: 56.25%; }
+}
+
+.vcard__play{
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, rgba(0,0,0,.04), rgba(0,0,0,.3));
+  pointer-events: none;
+}
+
+.vcard__play svg{
+  width: 54px;
+  height: 54px;
+  padding: 14px;
+  box-sizing: content-box;
+  border-radius: 50%;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow: 0 6px 20px rgba(0,0,0,.35);
+  transition: transform .2s;
+}
+
+.vcard:active .vcard__play svg{ transform: scale(.92); }
+
+.vcard__badge{
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  max-width: calc(100% - 16px);
+  padding: 3px 9px;
+  border-radius: 8px;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===================== 录音条（第 37 轮，语音条样式 + 自绘控件） ===================== */
+.abars{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.abar{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+.abar__btn{
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.abar__btn:active{ transform: scale(.9); }
+
+.abar__btn svg{
+  width: 18px;
+  height: 18px;
+}
+
+.abar__body{ flex: 1; min-width: 0; }
+
+.abar__name{
+  font-size: 13px;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color .15s;
+}
+
+.abar.playing .abar__name{ color: var(--brand); }
+
+.abar__track{
+  position: relative;
+  height: 4px;
+  margin-top: 7px;
+  border-radius: 2px;
+  background: var(--line);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.abar__fill{
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: 2px;
+  background: var(--brand);
+}
+
+.abar__time{
+  flex: 0 0 auto;
+  min-width: 42px;
+  text-align: right;
+  font-size: 12.5px;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+
+.abar audio{ display: none; }
+
+/* ===================== 全屏视频播放层（第 37 轮，自绘控件，不用原生 controls） ===================== */
+.vlayer{
+  position: fixed;
+  inset: 0;
+  z-index: 110;
+  background: rgba(0,0,0,.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: max(12px, var(--safe-top)) max(12px, var(--safe-right)) max(12px, var(--safe-bottom)) max(12px, var(--safe-left));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.vlayer.show{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.vlayer__wrap{
+  width: 100%;
+  max-width: 920px;
+}
+
+.vlayer video{
+  display: block;
+  width: 100%;
+  max-height: 74vh;
+  max-height: 74dvh;
+  background: #000;
+  border-radius: 12px;
+}
+
+.vlayer__bar{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 6px 2px;
+}
+
+.vlayer__btn{
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: background .15s, transform .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.vlayer__btn:hover{ background: rgba(255,255,255,.24); }
+.vlayer__btn:active{ transform: scale(.93); }
+.vlayer__btn svg{ width: 18px; height: 18px; }
+
+.vlayer__track{
+  flex: 1;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255,255,255,.25);
+  cursor: pointer;
+  position: relative;
+}
+
+.vlayer__fill{
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-radius: 3px;
+  background: var(--brand);
+}
+
+.vlayer__time{
+  flex: 0 0 auto;
+  min-width: 42px;
+  text-align: center;
+  font-size: 12.5px;
+  color: rgba(255,255,255,.85);
+  font-variant-numeric: tabular-nums;
+}
+
+.vlayer__err{
+  display: none;
+  text-align: center;
+  color: rgba(255,255,255,.75);
+  font-size: 13.5px;
+  padding: 26px 10px 6px;
+}
+
+.vlayer__err.show{ display: block; }
+
+/* ===================== 图片放大（第 37 轮：多图翻页 + 左右滑动） ===================== */
 .lightbox{
   position: fixed;
   inset: 0;
@@ -425,6 +682,80 @@ img{ -webkit-user-drag: none; user-select: none; }
   border-radius: 12px;
   object-fit: contain;
   box-shadow: 0 24px 60px rgba(0,0,0,.5);
+  touch-action: none; /* 手势交给滑动翻页逻辑，别让浏览器抢去滚动 */
+  user-select: none;
+  -webkit-user-drag: none;
+  will-change: transform;
+}
+
+.lightbox.anim img{ transition: transform .2s ease, opacity .18s ease; }
+
+.lb-count{
+  position: absolute;
+  top: max(16px, var(--safe-top));
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 13px;
+  border-radius: 999px;
+  background: rgba(0,0,0,.55);
+  color: #fff;
+  font-size: 13px;
+  letter-spacing: .6px;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .2s;
+}
+
+.lightbox.multi .lb-count{ opacity: 1; }
+
+.lb-close{
+  position: absolute;
+  top: max(10px, var(--safe-top));
+  right: max(10px, var(--safe-right));
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0,0,0,.5);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: background .15s;
+}
+
+.lb-close:hover{ background: rgba(0,0,0,.7); }
+.lb-close svg{ width: 20px; height: 20px; }
+
+.lb-nav{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0,0,0,.5);
+  color: #fff;
+  display: none;
+  place-items: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: background .15s, opacity .15s;
+}
+
+.lb-nav:hover:not(:disabled){ background: rgba(0,0,0,.72); }
+.lb-nav:disabled{ opacity: .3; cursor: default; }
+.lb-nav svg{ width: 22px; height: 22px; }
+.lb-nav--prev{ left: max(10px, var(--safe-left)); }
+.lb-nav--next{ right: max(10px, var(--safe-right)); }
+.lightbox.multi .lb-nav{ display: grid; }
+
+@media (max-width: 480px){
+  .lb-nav{ width: 38px; height: 38px; }
+  .lb-nav svg{ width: 19px; height: 19px; }
 }
 
 /* ===================== 小屏精细适配 ===================== */
@@ -459,6 +790,7 @@ img{ -webkit-user-drag: none; user-select: none; }
   }
   .post{ padding: 12px 14px; }
   .lightbox img{ max-height: 80vh; }
+  .vlayer video{ max-height: 80vh; }
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -494,7 +826,27 @@ img{ -webkit-user-drag: none; user-select: none; }
   © Powered by <span id="footerName">xxx</span>
 </footer>
 
-<div class="lightbox" id="lightbox"><img alt="" /></div>
+<div class="lightbox" id="lightbox">
+  <img alt="" />
+  <button class="lb-nav lb-nav--prev" id="lbPrev" type="button" aria-label="上一张"></button>
+  <button class="lb-nav lb-nav--next" id="lbNext" type="button" aria-label="下一张"></button>
+  <span class="lb-count" id="lbCount"></span>
+  <button class="lb-close" id="lbClose" type="button" aria-label="关闭"></button>
+</div>
+
+<div class="vlayer" id="vlayer">
+  <div class="vlayer__wrap">
+    <video id="vVideo" playsinline preload="metadata"></video>
+    <div class="vlayer__err" id="vErr">视频加载失败，稍后刷新重试</div>
+    <div class="vlayer__bar">
+      <button class="vlayer__btn" id="vToggle" type="button" aria-label="播放/暂停"></button>
+      <span class="vlayer__time" id="vCur">0:00</span>
+      <div class="vlayer__track" id="vTrack"><div class="vlayer__fill" id="vFill"></div></div>
+      <span class="vlayer__time" id="vDur">--:--</span>
+      <button class="vlayer__btn" id="vClose" type="button" aria-label="关闭"></button>
+    </div>
+  </div>
+</div>
 
 <script>
 /* =========================================================
@@ -524,6 +876,9 @@ const CONFIG = {
 const ICON = {
   chevLeft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>',
   chevRight: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>',
+  play: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.2v13.6c0 .8.9 1.3 1.6.9l10.8-6.8c.6-.4.6-1.4 0-1.8L9.6 4.3C8.9 3.9 8 4.4 8 5.2z"/></svg>',
+  pause: '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/></svg>',
+  close: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
 };
 
 /* =========================================================
@@ -534,6 +889,9 @@ const state = {
   avatar: CONFIG.fallbackAvatar,
   posts: [],
   currentPage: 1,
+
+  /* 第 37 轮：当前页每条帖子的图片列表，大图查看器翻页时按组取 */
+  imageGroups: [],
 };
 
 /* =========================================================
@@ -626,13 +984,57 @@ function normalizePost(raw, index){
   const time = raw.publishedAt || raw.time || new Date().toISOString();
   const text = raw.caption ?? raw.text ?? '';
   const images = normalizeImages(raw.imagePath ?? raw.images);
+  const videos = normalizeImages(raw.videoPath ?? raw.videos);   // 第 37 轮
+  const audios = normalizeImages(raw.audioPath ?? raw.audios);   // 第 37 轮
 
   return {
     id: String(id),
     time,
     text: String(text),
     images,
+    videos,
+    audios,
   };
+}
+
+/* =========================================================
+ * 5.1 媒体地址（第 37 轮）
+ *
+ * 视频/录音给两个 source：
+ *   1) raw.githubusercontent.com —— push 完立即可读，先试它
+ *   2) 站内相对地址 —— GitHub Pages 对视频/音频的 MIME 一定正确，
+ *      raw 被浏览器拒播（类型不对/被拦）时浏览器会自动落到这一路
+ * 图片沿用原有的站内相对地址（现状不变）。
+ * =======================================================*/
+function rawBaseUrl(){
+  const user = detectGitHubUsername();
+  if (!user) return '';
+  return `https://raw.githubusercontent.com/${encodeURIComponent(user)}/${encodeURIComponent(user)}.github.io/main/`;
+}
+
+function mediaSources(path, poster){
+  const suffix = poster ? '#t=0.001' : '';  // 卡片取首帧
+  const raw = rawBaseUrl();
+  return raw ? [raw + path + suffix, path + suffix] : [path + suffix];
+}
+
+function sourceTags(path, poster){
+  return mediaSources(path, poster)
+    .map(src => `<source src="${esc(src)}">`)
+    .join('');
+}
+
+/** `videos/2026-10-03-abc.mp4` → `2026-10-03-abc.mp4` */
+function fileName(path){
+  const s = String(path || '');
+  return s.slice(s.lastIndexOf('/') + 1);
+}
+
+/** 秒 → `m:ss`（元数据没拿到时返回 `--:--`） */
+function fmtDur(sec){
+  if (typeof sec !== 'number' || !isFinite(sec) || sec < 0) return '--:--';
+  const s = Math.round(sec);
+  return `${Math.floor(s / 60)}:${pad(s % 60)}`;
 }
 
 async function loadPosts(){
@@ -679,14 +1081,42 @@ function avatarHTML(size){
   return `<div class="${size}">${esc(initial)}</div>`;
 }
 
-function renderImages(images){
+function renderImages(images, groupIndex){
   if (!images.length) return '';
   const list = images.slice(0, 9);
   const n = list.length;
   const imgs = list.map(src =>
     `<img src="${esc(src)}" alt="" loading="lazy" decoding="async">`
   ).join('');
-  return `<div class="imgs" data-n="${n}">${imgs}</div>`;
+  return `<div class="imgs" data-n="${n}" data-g="${groupIndex}">${imgs}</div>`;
+}
+
+/* 视频卡片：首帧封面 + 大播放按钮，点开进全屏播放层（控件全部自绘） */
+function renderVideos(videos){
+  if (!videos.length) return '';
+  const cards = videos.map((path, i) => `
+    <div class="vcard" data-video="${esc(path)}" role="button" tabindex="0" aria-label="播放视频">
+      <video preload="metadata" muted playsinline>${sourceTags(path, true)}</video>
+      <div class="vcard__play">${ICON.play}</div>
+      <div class="vcard__badge" data-label="视频 ${i + 1}">视频 ${i + 1}</div>
+    </div>`).join('');
+  return `<div class="vcards">${cards}</div>`;
+}
+
+/* 录音条：播放按钮 + 进度 + 时长，就地播放（微信语音样式） */
+function renderAudios(audios){
+  if (!audios.length) return '';
+  const rows = audios.map((path, i) => `
+    <div class="abar">
+      <button class="abar__btn" type="button" aria-label="播放录音">${ICON.play}</button>
+      <div class="abar__body">
+        <div class="abar__name">录音 ${i + 1}</div>
+        <div class="abar__track"><div class="abar__fill"></div></div>
+      </div>
+      <span class="abar__time">--:--</span>
+      <audio preload="metadata">${sourceTags(path)}</audio>
+    </div>`).join('');
+  return `<div class="abars">${rows}</div>`;
 }
 
 function renderPost(p, i){
@@ -705,7 +1135,9 @@ function renderPost(p, i){
     </div>
 
     ${p.text ? `<div class="post__text">${linkify(esc(p.text))}</div>` : ''}
-    ${renderImages(p.images)}
+    ${renderImages(p.images, i)}
+    ${renderVideos(p.videos)}
+    ${renderAudios(p.audios)}
   </article>`;
 }
 
@@ -732,13 +1164,66 @@ function renderPager(){
 }
 
 function renderFeed(){
+  // 翻页/重渲染时先停掉正在播的录音，别让声音跟着页面一起被换掉
+  if (currentAudio) {
+    try { currentAudio.pause(); } catch (e) { /* 忽略 */ }
+    currentAudio = null;
+  }
+
   if (!state.posts.length) {
     feed.innerHTML = '<div class="state">还没有说说～<br>在 <code>posts.json</code> 里添加一条吧</div>';
     return;
   }
 
   const pagePosts = getPagePosts();
+  state.imageGroups = pagePosts.map(p => p.images);  // 大图查看器按组翻页
   feed.innerHTML = pagePosts.map(renderPost).join('') + renderPager();
+  bindMedia(feed);
+}
+
+/**
+ * 给新渲染出来的录音条 / 视频卡片挂事件。
+ * （每次 renderFeed 都会换掉整棵 DOM，所以节点没了监听也没了，必须重挂）
+ */
+function bindMedia(root){
+  root.querySelectorAll('.vcard video').forEach(v => {
+    const badge = v.closest('.vcard').querySelector('.vcard__badge');
+    v.addEventListener('loadedmetadata', () => {
+      badge.textContent = `${badge.dataset.label} · ${fmtDur(v.duration)}`;
+    });
+  });
+
+  root.querySelectorAll('.abar audio').forEach(audio => {
+    const bar = audio.closest('.abar');
+    const btn = bar.querySelector('.abar__btn');
+    const fill = bar.querySelector('.abar__fill');
+    const time = bar.querySelector('.abar__time');
+
+    audio.addEventListener('loadedmetadata', () => {
+      time.textContent = fmtDur(audio.duration);
+    });
+    audio.addEventListener('timeupdate', () => {
+      const ratio = audio.duration ? audio.currentTime / audio.duration : 0;
+      fill.style.width = (ratio * 100).toFixed(2) + '%';
+      if (!audio.paused) time.textContent = fmtDur(audio.currentTime);
+    });
+    audio.addEventListener('play', () => {
+      // 同一时刻只放一条
+      if (currentAudio && currentAudio !== audio) currentAudio.pause();
+      currentAudio = audio;
+      bar.classList.add('playing');
+      btn.innerHTML = ICON.pause;
+    });
+    audio.addEventListener('pause', () => {
+      bar.classList.remove('playing');
+      btn.innerHTML = ICON.play;
+      time.textContent = fmtDur(audio.duration);  // 暂停时回到总时长
+    });
+    audio.addEventListener('ended', () => {
+      fill.style.width = '0%';
+      audio.currentTime = 0;
+    });
+  });
 }
 
 function updateCount(){
@@ -786,23 +1271,188 @@ function renderError(err){
  * =======================================================*/
 const lightbox = $('lightbox');
 const lightboxImg = lightbox.querySelector('img');
+const lbCount = $('lbCount');
+const lbPrev = $('lbPrev');
+const lbNext = $('lbNext');
+const lbClose = $('lbClose');
 
-function openLightbox(src){
-  lightboxImg.src = src;
+const vlayer = $('vlayer');
+const vVideo = $('vVideo');
+const vErr = $('vErr');
+const vToggle = $('vToggle');
+const vTrack = $('vTrack');
+const vFill = $('vFill');
+const vCur = $('vCur');
+const vDur = $('vDur');
+const vClose = $('vClose');
+
+let currentAudio = null;   // 当前在播的录音（同一时刻只放一条）
+
+/* ---------- 大图查看器：多图翻页 + 左右滑动 ---------- */
+const lb = { list: [], i: 0 };
+
+function lbSync(){
+  const n = lb.list.length;
+  lightbox.classList.toggle('multi', n > 1);
+  lightboxImg.src = lb.list[lb.i] || '';
+  lbCount.textContent = `${lb.i + 1} / ${n}`;
+  lbPrev.disabled = lb.i <= 0;
+  lbNext.disabled = lb.i >= n - 1;
+}
+
+function openLightbox(list, index){
+  if (!list || !list.length) return;
+  lb.list = list.slice(0, 9);
+  lb.i = Math.min(Math.max(index || 0, 0), lb.list.length - 1);
+  lbSync();
+  lightbox.classList.add('anim');
   lightbox.classList.add('show');
   document.body.style.overflow = 'hidden';
 }
 
-function closeLightbox(){
-  lightbox.classList.remove('show');
-  document.body.style.overflow = '';
+function lbGo(delta){
+  const next = lb.i + delta;
+  if (next < 0 || next >= lb.list.length) return;
+  lb.i = next;
+  lbSync();
 }
 
-lightbox.addEventListener('click', closeLightbox);
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeLightbox();
+function closeLightbox(){
+  lightbox.classList.remove('show');
+  lb.list = [];
+  document.body.style.overflow = vlayer.classList.contains('show') ? 'hidden' : '';
+}
+
+/* 拖动翻页：Pointer Events 手机鼠标通吃。
+   浏览器侧的横向滚动已被图片上的 touch-action: none 拦下。 */
+const drag = { active: false, axis: null, x0: 0, y0: 0, dx: 0 };
+
+lightboxImg.addEventListener('pointerdown', e => {
+  if (lb.list.length < 2) return;
+  drag.active = true;
+  drag.axis = null;
+  drag.x0 = e.clientX;
+  drag.y0 = e.clientY;
+  drag.dx = 0;
+  lightboxImg.setPointerCapture?.(e.pointerId);
+  lightbox.classList.remove('anim');
 });
 
+lightboxImg.addEventListener('pointermove', e => {
+  if (!drag.active) return;
+  const dx = e.clientX - drag.x0;
+  const dy = e.clientY - drag.y0;
+  if (!drag.axis) {
+    if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+    drag.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';   // 定了轴就不再改
+  }
+  if (drag.axis !== 'x') return;
+  e.preventDefault();
+  drag.dx = dx;
+  // 拖到头给一点阻尼，不至于生硬卡住
+  const atEdge = (lb.i === 0 && dx > 0) || (lb.i === lb.list.length - 1 && dx < 0);
+  lightboxImg.style.transform = `translateX(${atEdge ? dx * 0.3 : dx}px)`;
+});
+
+function lbEndDrag(){
+  if (!drag.active) return;
+  drag.active = false;
+  lightbox.classList.add('anim');
+  lightboxImg.style.transform = '';
+  if (drag.axis === 'x' && Math.abs(drag.dx) > 60) {
+    lbGo(drag.dx < 0 ? 1 : -1);
+  }
+  drag.axis = null;
+  drag.dx = 0;
+}
+lightboxImg.addEventListener('pointerup', lbEndDrag);
+lightboxImg.addEventListener('pointercancel', lbEndDrag);
+
+/* ---------- 全屏视频播放层（自绘控件） ---------- */
+function vOpen(path){
+  vErr.classList.remove('show');
+  vFill.style.width = '0';
+  vCur.textContent = '0:00';
+  vDur.textContent = '--:--';
+  vVideo.innerHTML = sourceTags(path);   // raw 优先，站内兜底
+  vVideo.load();
+  vlayer.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  vVideo.play().catch(() => { /* 被浏览器拦自动播放也没关系，按钮还能点 */ });
+}
+
+function vCloseNow(){
+  vVideo.pause();
+  vVideo.removeAttribute('src');
+  vVideo.innerHTML = '';
+  vVideo.load();
+  vlayer.classList.remove('show');
+  if (!lightbox.classList.contains('show')) document.body.style.overflow = '';
+}
+
+function vSyncIcon(){
+  vToggle.innerHTML = vVideo.paused ? ICON.play : ICON.pause;
+}
+
+vVideo.addEventListener('loadedmetadata', () => { vDur.textContent = fmtDur(vVideo.duration); });
+vVideo.addEventListener('timeupdate', () => {
+  vCur.textContent = fmtDur(vVideo.currentTime);
+  const ratio = vVideo.duration ? vVideo.currentTime / vVideo.duration : 0;
+  vFill.style.width = (ratio * 100).toFixed(2) + '%';
+});
+vVideo.addEventListener('play', vSyncIcon);
+vVideo.addEventListener('pause', vSyncIcon);
+// 两个 source 都失败才走到这里（raw 挂了会先自动试站内地址）
+vVideo.addEventListener('error', () => { if (vVideo.error) vErr.classList.add('show'); });
+
+vToggle.addEventListener('click', () => {
+  if (vVideo.paused) vVideo.play().catch(() => {});
+  else vVideo.pause();
+});
+vVideo.addEventListener('click', () => vToggle.click());
+vClose.addEventListener('click', vCloseNow);
+
+function vSeek(clientX){
+  const rect = vTrack.getBoundingClientRect();
+  const ratio = Math.min(Math.max((clientX - rect.left) / rect.width, 0), 1);
+  if (isFinite(vVideo.duration)) vVideo.currentTime = ratio * vVideo.duration;
+}
+let vSeeking = false;
+vTrack.addEventListener('pointerdown', e => {
+  vSeeking = true;
+  vTrack.setPointerCapture?.(e.pointerId);
+  vSeek(e.clientX);
+});
+vTrack.addEventListener('pointermove', e => { if (vSeeking) vSeek(e.clientX); });
+vTrack.addEventListener('pointerup', () => { vSeeking = false; });
+vTrack.addEventListener('pointercancel', () => { vSeeking = false; });
+
+/* ---------- 按钮图标 ---------- */
+lbPrev.innerHTML = ICON.chevLeft;
+lbNext.innerHTML = ICON.chevRight;
+lbClose.innerHTML = ICON.close;
+vToggle.innerHTML = ICON.play;
+vClose.innerHTML = ICON.close;
+
+/* ---------- 查看器 / 播放层的点按与键盘 ---------- */
+lightbox.addEventListener('click', e => {
+  if (e.target.closest('.lb-close') || e.target === lightbox) { closeLightbox(); return; }
+  if (e.target.closest('.lb-nav--prev')) { lbGo(-1); return; }
+  if (e.target.closest('.lb-nav--next')) { lbGo(1); }
+});
+
+document.addEventListener('keydown', e => {
+  if (vlayer.classList.contains('show')) {
+    if (e.key === 'Escape') vCloseNow();
+    return;
+  }
+  if (!lightbox.classList.contains('show')) return;
+  if (e.key === 'Escape') closeLightbox();
+  else if (e.key === 'ArrowLeft') lbGo(-1);
+  else if (e.key === 'ArrowRight') lbGo(1);
+});
+
+/* ---------- 信息流点击（分页 / 视频 / 录音 / 大图） ---------- */
 feed.addEventListener('click', e => {
   /* 分页 */
   const pageBtn = e.target.closest('.pager__btn');
@@ -819,9 +1469,37 @@ feed.addEventListener('click', e => {
     return;
   }
 
-  /* 看大图 */
+  /* 视频卡片 → 全屏播放层 */
+  const vcard = e.target.closest('.vcard');
+  if (vcard) { vOpen(vcard.dataset.video); return; }
+
+  /* 录音条 → 播放/暂停 */
+  const abtn = e.target.closest('.abar__btn');
+  if (abtn) {
+    const audio = abtn.closest('.abar').querySelector('audio');
+    if (audio.paused) audio.play().catch(() => {});
+    else audio.pause();
+    return;
+  }
+
+  /* 录音进度条 → 定位（已暂停则只改位置不播） */
+  const atrack = e.target.closest('.abar__track');
+  if (atrack) {
+    const audio = atrack.closest('.abar').querySelector('audio');
+    const rect = atrack.getBoundingClientRect();
+    const ratio = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+    if (isFinite(audio.duration)) audio.currentTime = ratio * audio.duration;
+    return;
+  }
+
+  /* 看大图（按帖子分组翻页） */
   const img = e.target.closest('.imgs img');
-  if (img) openLightbox(img.currentSrc || img.src);
+  if (img) {
+    const group = img.closest('.imgs');
+    const list = state.imageGroups[Number(group.dataset.g)] || [];
+    const index = Array.prototype.indexOf.call(group.querySelectorAll('img'), img);
+    openLightbox(list, index);
+  }
 });
 
 /* =========================================================
